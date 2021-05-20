@@ -1,31 +1,22 @@
 apply plugin: 'com.android.library'
-
-ext {
-    bintrayName = 'arouter-api'
-    artifact = bintrayName
-    libraryName = 'ARouter sdk'
-    libraryDescription = 'A router for android'
-    libraryVersion = arouter_main_version
-}
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion Integer.parseInt(COMPILE_SDK_VERSION)
-    buildToolsVersion BUILDTOOLS_VERSION
+    compileSdkVersion android_versions.compileSDKVersion
+    buildToolsVersion android_versions.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion Integer.parseInt(MIN_SDK_VERSION)
-        targetSdkVersion Integer.parseInt(TARGET_SDK_VERSION)
-
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments = [AROUTER_MODULE_NAME: project.getName()]
-            }
-        }
+        minSdkVersion android_versions.minSDKVersion
+        targetSdkVersion android_versions.targetSDKVersion
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
     }
 
     buildTypes {
@@ -36,14 +27,19 @@ android {
 
         lintOptions { abortOnError false }
     }
+
+    kapt {
+        arguments {
+            arg("AROUTER_MODULE_NAME", project.getName())
+        }
+    }
 }
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.0.0'
-    annotationProcessor 'com.alibaba:arouter-compiler:1.5.1'
-    api 'com.alibaba:arouter-annotation:1.0.6'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.3.0'
+    kapt "com.hengyi.android.base:arouter-compiler:${router_x_version}"
+    api "com.hengyi.android.base:arouter-annotation:${router_x_version}"
+//    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 }
 
-apply from: '../install.gradle'
-apply from: '../bintray.gradle'
+apply from: '../gradle/publish.gradle'

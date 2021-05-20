@@ -1,0 +1,3 @@
+apply from: '../../YogaBusinessComponents/gradle/maven_push_base.gradle'
+
+version = router_x_version

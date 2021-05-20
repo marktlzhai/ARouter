@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.alibaba.arouter'
 
 android {
     compileSdkVersion Integer.parseInt(COMPILE_SDK_VERSION)
