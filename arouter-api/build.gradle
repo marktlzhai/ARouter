@@ -39,9 +39,10 @@ android {
 }
 
 dependencies {
+    implementation 'androidx.appcompat:appcompat:1.0.0'
     annotationProcessor 'com.alibaba:arouter-compiler:1.5.1'
     api 'com.alibaba:arouter-annotation:1.0.6'
-    implementation "com.android.support:support-v4:${SUPPORT_LIB_VERSION}"
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 }
 
 apply from: '../install.gradle'

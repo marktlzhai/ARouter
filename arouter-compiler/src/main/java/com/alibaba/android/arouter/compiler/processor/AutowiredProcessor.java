@@ -28,16 +28,19 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.annotation.processing.SupportedOptions;
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 
-import static com.alibaba.android.arouter.compiler.utils.Consts.*;
+import static com.alibaba.android.arouter.compiler.utils.Consts.ANNOTATION_TYPE_AUTOWIRED;
+import static com.alibaba.android.arouter.compiler.utils.Consts.ISYRINGE;
+import static com.alibaba.android.arouter.compiler.utils.Consts.JSON_SERVICE;
+import static com.alibaba.android.arouter.compiler.utils.Consts.METHOD_INJECT;
+import static com.alibaba.android.arouter.compiler.utils.Consts.NAME_OF_AUTOWIRED;
+import static com.alibaba.android.arouter.compiler.utils.Consts.TYPE_WRAPPER;
+import static com.alibaba.android.arouter.compiler.utils.Consts.WARNING_TIPS;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
 /**
@@ -50,7 +53,7 @@ import static javax.lang.model.element.Modifier.PUBLIC;
 @AutoService(Processor.class)
 @SupportedAnnotationTypes({ANNOTATION_TYPE_AUTOWIRED})
 public class AutowiredProcessor extends BaseProcessor {
-    private Map<TypeElement, List<Element>> parentAndChild = new HashMap<>();   // Contain field need autowired and his super class.
+    private final Map<TypeElement, List<Element>> parentAndChild = new HashMap<>();   // Contain field need autowired and his super class.
     private static final ClassName ARouterClass = ClassName.get("com.alibaba.android.arouter.launcher", "ARouter");
     private static final ClassName AndroidLog = ClassName.get("android.util", "Log");
 
@@ -81,10 +84,10 @@ public class AutowiredProcessor extends BaseProcessor {
     private void generateHelper() throws IOException, IllegalAccessException {
         TypeElement type_ISyringe = elementUtils.getTypeElement(ISYRINGE);
         TypeElement type_JsonService = elementUtils.getTypeElement(JSON_SERVICE);
+
         TypeMirror iProvider = elementUtils.getTypeElement(Consts.IPROVIDER).asType();
-        TypeMirror activityTm = elementUtils.getTypeElement(Consts.ACTIVITY).asType();
-        TypeMirror fragmentTm = elementUtils.getTypeElement(Consts.FRAGMENT).asType();
-        TypeMirror fragmentTmV4 = elementUtils.getTypeElement(Consts.FRAGMENT_V4).asType();
+        TypeMirror activityTm = elementUtils.getTypeElement(Consts.ACTIVITY_X).asType();
+        TypeMirror fragmentTm = elementUtils.getTypeElement(Consts.FRAGMENT_X).asType();
 
         // Build input param name.
         ParameterSpec objectParamSpec = ParameterSpec.builder(TypeName.OBJECT, "target").build();
@@ -154,7 +157,7 @@ public class AutowiredProcessor extends BaseProcessor {
                         if (types.isSubtype(parent.asType(), activityTm)) {  // Activity, then use getIntent()
                             isActivity = true;
                             statement += "getIntent().";
-                        } else if (types.isSubtype(parent.asType(), fragmentTm) || types.isSubtype(parent.asType(), fragmentTmV4)) {   // Fragment, then use getArguments()
+                        } else if (types.isSubtype(parent.asType(), fragmentTm)) {   // Fragment, then use getArguments()
                             statement += "getArguments().";
                         } else {
                             throw new IllegalAccessException("The field [" + fieldName + "] need autowired from intent, its parent must be activity or fragment!");

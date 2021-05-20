@@ -1,9 +1,10 @@
 package com.alibaba.android.arouter.demo.module1.testinterceptor;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.util.Log;
+
+import androidx.appcompat.app.AlertDialog;
 
 import com.alibaba.android.arouter.demo.module1.MainLooper;
 import com.alibaba.android.arouter.facade.Postcard;

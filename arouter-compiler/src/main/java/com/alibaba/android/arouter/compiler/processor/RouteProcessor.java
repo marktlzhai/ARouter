@@ -43,10 +43,10 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import javax.tools.StandardLocation;
 
-import static com.alibaba.android.arouter.compiler.utils.Consts.ACTIVITY;
+import static com.alibaba.android.arouter.compiler.utils.Consts.ACTIVITY_X;
 import static com.alibaba.android.arouter.compiler.utils.Consts.ANNOTATION_TYPE_AUTOWIRED;
 import static com.alibaba.android.arouter.compiler.utils.Consts.ANNOTATION_TYPE_ROUTE;
-import static com.alibaba.android.arouter.compiler.utils.Consts.FRAGMENT;
+import static com.alibaba.android.arouter.compiler.utils.Consts.FRAGMENT_X;
 import static com.alibaba.android.arouter.compiler.utils.Consts.IPROVIDER_GROUP;
 import static com.alibaba.android.arouter.compiler.utils.Consts.IROUTE_GROUP;
 import static com.alibaba.android.arouter.compiler.utils.Consts.ITROUTE_ROOT;
@@ -71,8 +71,8 @@ import static javax.lang.model.element.Modifier.PUBLIC;
 @AutoService(Processor.class)
 @SupportedAnnotationTypes({ANNOTATION_TYPE_ROUTE, ANNOTATION_TYPE_AUTOWIRED})
 public class RouteProcessor extends BaseProcessor {
-    private Map<String, Set<RouteMeta>> groupMap = new HashMap<>(); // ModuleName and routeMeta.
-    private Map<String, String> rootMap = new TreeMap<>();  // Map of root metas, used for generate class file in order.
+    private final Map<String, Set<RouteMeta>> groupMap = new HashMap<>(); // ModuleName and routeMeta.
+    private final Map<String, String> rootMap = new TreeMap<>();  // Map of root metas, used for generate class file in order.
 
     private TypeMirror iProvider = null;
     private Writer docWriter;       // Writer used for write doc
@@ -129,10 +129,9 @@ public class RouteProcessor extends BaseProcessor {
 
             rootMap.clear();
 
-            TypeMirror type_Activity = elementUtils.getTypeElement(ACTIVITY).asType();
+            TypeMirror type_Activity = elementUtils.getTypeElement(ACTIVITY_X).asType();
             TypeMirror type_Service = elementUtils.getTypeElement(SERVICE).asType();
-            TypeMirror fragmentTm = elementUtils.getTypeElement(FRAGMENT).asType();
-            TypeMirror fragmentTmV4 = elementUtils.getTypeElement(Consts.FRAGMENT_V4).asType();
+            TypeMirror fragmentTm = elementUtils.getTypeElement(FRAGMENT_X).asType();
 
             // Interface of ARouter
             TypeElement type_IRouteGroup = elementUtils.getTypeElement(IROUTE_GROUP);
@@ -186,7 +185,7 @@ public class RouteProcessor extends BaseProcessor {
                 RouteMeta routeMeta;
 
                 // Activity or Fragment
-                if (types.isSubtype(tm, type_Activity) || types.isSubtype(tm, fragmentTm) || types.isSubtype(tm, fragmentTmV4)) {
+                if (types.isSubtype(tm, type_Activity) || types.isSubtype(tm, fragmentTm)) {
                     // Get all fields annotation by @Autowired
                     Map<String, Integer> paramsType = new HashMap<>();
                     Map<String, Autowired> injectConfig = new HashMap<>();
@@ -199,7 +198,7 @@ public class RouteProcessor extends BaseProcessor {
                     } else {
                         // Fragment
                         logger.info(">>> Found fragment route: " + tm.toString() + " <<<");
-                        routeMeta = new RouteMeta(route, element, RouteType.parse(FRAGMENT), paramsType);
+                        routeMeta = new RouteMeta(route, element, RouteType.parse(FRAGMENT_X), paramsType);
                     }
 
                     routeMeta.setInjectConfig(injectConfig);

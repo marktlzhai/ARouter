@@ -24,9 +24,8 @@ public class Consts {
     public static final String PACKAGE_OF_GENERATE_DOCS = "com.alibaba.android.arouter.docs";
 
     // System interface
-    public static final String ACTIVITY = "android.app.Activity";
-    public static final String FRAGMENT = "android.app.Fragment";
-    public static final String FRAGMENT_V4 = "android.support.v4.app.Fragment";
+    public static final String ACTIVITY_X = "androidx.appcompat.app.AppCompatActivity";
+    public static final String FRAGMENT_X = "androidx.fragment.app.Fragment";
     public static final String SERVICE = "android.app.Service";
     public static final String PARCELABLE = "android.os.Parcelable";
 
